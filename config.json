@@ -1,0 +1,5 @@
+{
+
+    "secret": "a secret that no one should guess",
+    "connectionString": "mongodb+srv://cuongpq1000vn:0913825888@cluster0.oc5nk.mongodb.net/test"
+}
