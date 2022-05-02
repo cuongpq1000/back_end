@@ -12,6 +12,7 @@ const io = require('socket.io')(http, {
 });
 
 const errorHandler = require('./helpers/error-handler');
+const { join } = require('path');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
@@ -22,21 +23,19 @@ app.use(errorHandler);
 
 var rooms = {}
 
+
 io.on('connection', (socket) =>{
 
 
-  socket.on('message', (msg) => {
-    socket.broadcast.emit('message-broadcast', msg);
+  socket.on('message', (data) => {
+    socket.to(data.roomId).emit('message-broadcast', data.message);
    });
 
    socket.on('joinroom', function(room) {
-     this.join(room);
      if(typeof rooms[room] === "undefined") rooms[room] = {};
-     rooms[room].count = rooms[room].total ? rooms[room].total + 1 : 1;
+     rooms[room].count = rooms[room].count ? rooms[room].count + 1 : 1;
+     socket.join(room)
      io.to(room).emit("new user", rooms[room].count)
-     console.log(rooms[room].count);
-
-
    });
 })
 
